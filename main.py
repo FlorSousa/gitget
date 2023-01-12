@@ -24,13 +24,20 @@ def download(repository_name) -> int:
         print(e)
         return 1
 
-def download_all() -> int:
-    #download all repositories from github api
+def get_repositories_from_github() -> int:
+    user = args[0].strip("--from=")
+    link = "https://api.github.com/users/{}/repos".format(user)
+    try:
+        repositories = requests.get(link).json()
+        for repo in repositories:
+            download(repo["name"])
+    except:
+        print("Erro to get repositories from Github API")
+        return 3
     return 0
 
 def download_from_file() -> int:
     #download repositories passed in a txt called .repo
-    repo = []
     try:
         fileHandle = open(".repo", "r")
         lines = fileHandle.readlines()
@@ -47,8 +54,8 @@ def download_from_file() -> int:
 def reader() -> None:
     status_code = 0
     for index_arg in range(len_args-1):
-        if index_arg == 0 and args[index_arg] == '-all':
-            status_code = download_all()
+        if index_arg == 1 and args[index_arg] == '-all':
+            status_code = get_repositories_from_github()
             break
         elif args[index_arg] == "-ff":
             status_code = download_from_file()
