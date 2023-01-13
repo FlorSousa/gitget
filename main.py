@@ -54,8 +54,8 @@ def reader() -> None:
         0:"Ok!",
         1:"Error during git clone process",
         2:"Error during read of .repo",
-        3:"Erro to get repositories from Github API",
-        4:"E",
+        3:"Error to get repositories from Github API",
+        4:"Command Error!",
     }
 
     status_code = 0
