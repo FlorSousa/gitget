@@ -50,12 +50,14 @@ def download_from_file() -> int:
     return 0
 
 def reader() -> None:
-    errors = {
+    outputs = {
         0:"Ok!",
         1:"Error during git clone process",
         2:"Error during read of .repo",
         3:"Erro to get repositories from Github API",
+        4:"E",
     }
+
     status_code = 0
     for index_arg in range(len_args-1):
         if index_arg == 1 and args[index_arg] == '-all':
@@ -64,9 +66,10 @@ def reader() -> None:
         elif args[index_arg] == "-ff":
             status_code = download_from_file()
             break
-        else:            
-            print("Invalid input")
-    
-    print(errors[status_code])
-        
+        else:
+            if args[index_arg].split("=")[0] != "--from":
+                status_code = 4
+                break
+    print(outputs[status_code])
+
 reader()
