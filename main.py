@@ -4,7 +4,7 @@ import requests
 
 len_args = len(sys.argv)
 args = sys.argv[1:len_args]
-def create_folder(cmd):
+def create_folder(cmd) -> None:
     path = os.path.dirname(__file__).strip("\\giget")
     try:
          erro_code = os.system("cd "+path+ "&& mkdir repositories && cd repositories &&" + cmd)
@@ -20,8 +20,7 @@ def download(repository_name) -> int:
          cmd = "git clone " + link
          create_folder(cmd)
          
-    except Exception as e:
-        print(e)
+    except:
         return 1
 
 def get_repositories_from_github() -> int:
@@ -32,7 +31,6 @@ def get_repositories_from_github() -> int:
         for repo in repositories:
             download(repo["name"])
     except:
-        print("Erro to get repositories from Github API")
         return 3
     return 0
 
@@ -52,6 +50,12 @@ def download_from_file() -> int:
     return 0
 
 def reader() -> None:
+    errors = {
+        0:"Ok!",
+        1:"Error during git clone process",
+        2:"Error during read of .repo",
+        3:"Erro to get repositories from Github API",
+    }
     status_code = 0
     for index_arg in range(len_args-1):
         if index_arg == 1 and args[index_arg] == '-all':
@@ -60,10 +64,9 @@ def reader() -> None:
         elif args[index_arg] == "-ff":
             status_code = download_from_file()
             break
-        else:
+        else:            
             print("Invalid input")
     
-    if status_code > 0:
-        print("Something got wrong")
+    print(errors[status_code])
         
 reader()
